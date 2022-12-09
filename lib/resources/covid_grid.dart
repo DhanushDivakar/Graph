@@ -9,8 +9,7 @@ class CovidGridSource extends DataGridSource {
     dataGridRows = covid19
         .map(
           (covid19GridRow) => DataGridRow(
-            cells: 
-            [
+            cells: [
               DataGridCell<DateTime>(
                   columnName: 'Date', value: covid19GridRow.date),
               DataGridCell<int>(
@@ -29,18 +28,17 @@ class CovidGridSource extends DataGridSource {
 
   @override
   List<DataGridRow> get rows => dataGridRows;
-  
 
   @override
-  DataGridRowAdapter? buildRow(DataGridRow row) {    
+  DataGridRowAdapter? buildRow(DataGridRow row) {
     return DataGridRowAdapter(
       cells: row.getCells().map<Widget>((dataGridCell) {
-        if(dataGridCell.columnName =='Action'){
-          return IconButton(onPressed: (){
-            //print("Tapped");
-            final aa = row.getCells().indexOf(dataGridCell);
-            print(aa);
-          }, icon: Icon(Icons.show_chart));
+        if (dataGridCell.columnName == 'Action') {
+          return IconButton(
+              onPressed: () {
+                print(dataGridCell);
+              },
+              icon: Icon(Icons.show_chart));
         }
         return Text(dataGridCell.value.toString());
       }).toList(),
