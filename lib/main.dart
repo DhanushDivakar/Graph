@@ -6,14 +6,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 // ignore: must_be_immutable
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
+ const  MyApp({super.key});
 
-  late CovidGridSource _covidGridSource;
+  
 
   // This widget is the root of your application.
   @override
@@ -38,13 +38,11 @@ class MyHome extends StatelessWidget {
   CovidGridSource? _covidGridSource;
   @override
   Widget build(BuildContext context) {
-    print(_covidGridSource);
+    //print(_covidGridSource);
     return SfDataGrid(source: _covidGridSource!, columns: [
       GridColumn(
           columnName: 'Date',
-          label: Container(
-            child: const Text('Date'),
-          ))
+          label: const Text('Date'))
     ]);
   }
 }
@@ -55,270 +53,281 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Chart'),
-        ),
-        body: BlocBuilder<CovidBloc, CovidState>(
-          builder: (context, state) {
-            if (state.isLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (state.covidData.isNotEmpty) {
-              final covid19Data = state.covidData;
-              return SingleChildScrollView(
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  child: Column(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          'Date vs Death',
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: LineChart(
-                            LineChartData(
-                              gridData: FlGridData(
-                                getDrawingHorizontalLine: (value) {
-                                  return FlLine(
-                                    color:  Colors.brown,
-                                    strokeWidth: 0.5,
-                                  );
-                                },
-                                getDrawingVerticalLine: (value) {
-                                  return FlLine(
-                                    color: Color.fromARGB(255, 212, 18, 18),
-                                    strokeWidth: 1,
-                                  );
-                                },
-                              ),
-                              backgroundColor: Colors.black12,
-                              titlesData: FlTitlesData(
-                                  topTitles: AxisTitles(
-                                      sideTitles:
-                                          SideTitles(showTitles: false)),
-                                  rightTitles: AxisTitles(
-                                      sideTitles:
-                                          SideTitles(showTitles: false))),
-                              lineBarsData: [
-                                LineChartBarData(
-                                  color: Colors.purple,
-                                  spots: covid19Data.map((point) {
-                                    final x = (point.date
-                                            ?.difference(DateTime.now())
-                                            .inDays
-                                            .toDouble() ??
-                                        0.0);
-                                    final y = point.death?.toDouble() ?? 0.0;
-                                    return FlSpot(x, y);
-                                  }).toList(),
-                                  isCurved: true,
-                                  dotData: FlDotData(show: true),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          'Date vs Positive',
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: LineChart(
-                            LineChartData(
-                              titlesData: FlTitlesData(
-                                topTitles: AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false),
-                                ),
-                                rightTitles: AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false),
-                                ),
-                              ),
-                              gridData: FlGridData(show: false),
-                              lineBarsData: [
-                                LineChartBarData(
-                                  spots: covid19Data
-                                      .map(
-                                        (point) => FlSpot(
-                                            (point.date
-                                                    ?.difference(DateTime.now())
-                                                    .inDays
-                                                    .toDouble()) ??
-                                                0.0,
-                                            point.positive?.toDouble() ?? 0.0),
-                                      )
-                                      .toList(),
-                                  isCurved: true,
-                                  dotData: FlDotData(show: true),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      SfDataGrid(
-                          source: CovidGridSource(covid19: covid19Data),
-                          columnWidthMode: ColumnWidthMode.fill,
-                          //allowSorting: true,
-                          onCellTap: ((details) {
-                            print(details.rowColumnIndex);
-                          }),
-                          columns: [
-                            GridColumn(
-                              columnName: 'Date',
-                              label: const Text('Date'),
-                            ),
-                            GridColumn(
-                              columnName: 'Positive',
-                              label: const Text('Positive'),
-                            ),
-                            GridColumn(
-                              columnName: 'Negative',
-                              label: const Text('Negative'),
-                            ),
-                            GridColumn(
-                                columnName: 'Action',
-                                label: const Text('Action'))
-                          ]),
-                    ],
-                  ),
-                ),
-              );
-
-              // return SingleChildScrollView(
-              //   child: SizedBox(
-              //     height: MediaQuery.of(context).size.height,
-              //     child: Column(
-              //       children: [
-              //         const Padding(
-              //           padding: EdgeInsets.all(10),
-              //           child: Text(
-              //             'Date vs Death',
-              //             style: TextStyle(fontSize: 20),
-              //           ),
-              //         ),
-              //         Expanded(
-              //           child: LineChart(
-              //             LineChartData(
-              //               lineBarsData: [
-              //                 LineChartBarData(
-              //                   spots: covid19Data.map((point) {
-              //                     final x = (point.date
-              //                             ?.difference(DateTime.now())
-              //                             .inDays
-              //                             .toDouble() ??
-              //                         0.0);
-              //                     final y = point.death?.toDouble() ?? 0.0;
-              //                     return FlSpot(x, y);
-              //                   }).toList(),
-              //                   isCurved: true,
-              //                   dotData: FlDotData(show: true),
-              //                 )
-              //               ],
-              //             ),
-              //           ),
-              //         ),
-              //         const Padding(
-              //           padding: EdgeInsets.all(10),
-              //           child: Text(
-              //             'Date vs Positive',
-              //             style: TextStyle(fontSize: 20),
-              //           ),
-              //         ),
-              //         Expanded(
-              //           child: Padding(
-              //             padding: const EdgeInsets.all(8.0),
-              //             child: LineChart(
-              //               LineChartData(
-              //                 titlesData: FlTitlesData(
-              //                   topTitles: AxisTitles(
-              //                     sideTitles: SideTitles(showTitles: false),
-              //                   ),
-              //                   rightTitles: AxisTitles(
-              //                     sideTitles: SideTitles(showTitles: false),
-              //                   ),
-              //                 ),
-              //                 gridData: FlGridData(show: false),
-              //                 lineBarsData: [
-              //                   LineChartBarData(
-              //                     spots: covid19Data
-              //                         .map(
-              //                           (point) => FlSpot(
-              //                               (point.date?.microsecondsSinceEpoch
-              //                                       .toDouble()) ??
-              //                                   0.0,
-              //                               point.positive?.toDouble() ?? 0.0),
-              //                         )
-              //                         .toList(),
-              //                     isCurved: true,
-              //                     dotData: FlDotData(show: true),
-              //                   ),
-              //                 ],
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // );
-
-              // return ListView.builder(
-              //   itemCount: covid19Data.length,
-              //   itemBuilder: (BuildContext context, int index) {
-              //     return AspectRatio(
-              //       aspectRatio: 2,
-              //       child: LineChart(
-              //         LineChartData(
-              //           lineBarsData: [
-              //             LineChartBarData(
-              //                 spots: covid19Data
-              //                     .map((point) => FlSpot(
-              //                         point.death?.toDouble() ?? 0.0,
-              //                         point.death?.toDouble() ?? 0.0))
-              //                     .toList(),
-              //                 isCurved: true,
-              //                 dotData: FlDotData(show: true))
-              //           ],
-              //         ),
-              //       ),
-              //     );
-              //     // return Column(
-              //     //   children: [
-              //     //     Text('${covid19Data[index].death}'),
-              //     //      Text('${covid19Data[index].date}'),
-              //     //   ],
-              //     // );
-              //   },
-              // );
-
-            }
-
-            return Center(
-              child: TextButton.icon(
-                  onPressed: () {
-                    context.read<CovidBloc>().add(GetCovidData());
-                  },
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Refresh')),
+      appBar: AppBar(
+        title: const Text('Chart'),
+      ),
+      body: BlocBuilder<CovidBloc, CovidState>(
+        builder: (context, state) {
+          if (state.isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-          },
-        )
+          } else if (state.covidData.isNotEmpty) {
+            final covid19Data = state.covidData;
+            return SingleChildScrollView(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        'Date vs Death',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: LineChart(
+                          LineChartData(
+                            gridData: FlGridData(
+                              getDrawingHorizontalLine: (value) {
+                                return FlLine(
+                                  color: Colors.brown,
+                                  strokeWidth: 0.5,
+                                );
+                              },
+                              getDrawingVerticalLine: (value) {
+                                return FlLine(
+                                  color: const  Color.fromARGB(255, 212, 18, 18),
+                                  strokeWidth: 1,
+                                );
+                              },
+                            ),
+                            backgroundColor: Colors.black12,
+                            titlesData: FlTitlesData(
+                                topTitles: AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false)),
+                                rightTitles: AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false))),
+                            lineBarsData: [
+                              LineChartBarData(
+                                color: Colors.purple,
+                                spots: covid19Data.map((point) {
+                                  final x = (point.date
+                                          ?.difference(DateTime.now())
+                                          .inDays
+                                          .toDouble() ??
+                                      0.0);
+                                  final y = point.death?.toDouble() ?? 0.0;
+                                  return FlSpot(x, y);
+                                }).toList(),
+                                isCurved: true,
+                                dotData: FlDotData(show: true),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        'Date vs Positive',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: LineChart(
+                          LineChartData(
+                            titlesData: FlTitlesData(
+                              topTitles: AxisTitles(
+                                sideTitles: SideTitles(showTitles: false),
+                              ),
+                              rightTitles: AxisTitles(
+                                sideTitles: SideTitles(showTitles: false),
+                              ),
+                            ),
+                            gridData: FlGridData(show: false),
+                            lineBarsData: [
+                              LineChartBarData(
+                                spots: covid19Data
+                                    .map(
+                                      (point) => FlSpot(
+                                          (point.date
+                                                  ?.difference(DateTime.now())
+                                                  .inDays
+                                                  .toDouble()) ??
+                                              0.0,
+                                          point.positive?.toDouble() ?? 0.0),
+                                    )
+                                    .toList(),
+                                isCurved: true,
+                                dotData: FlDotData(show: true),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SfDataGrid(
+                      source: CovidGridSource(covid19: covid19Data),
+                      columnWidthMode: ColumnWidthMode.fill,
+                      allowSorting: true,
+                      // onCellTap: ((details) {
+                      //   print(details.rowColumnIndex);
+                      // }),
+                      columns: [
+                        GridColumn(
+                          columnName: 'Date',
+                          label: const Text('Date'),
+                        ),
+                        GridColumn(
+                          columnName: 'Positive',
+                          label: const Text('Positive'),
+                        ),
+                        GridColumn(
+                          columnName: 'Negative',
+                          label: const Text('Negative'),
+                        ),
+                        GridColumn(
+                          columnName: 'Action',
+                          label: const Text('Action'),
+                        ),
+                        GridColumn(
+                          columnName: 'Hospitalized',
+                          label: const Text('Hospitalized'),
+                        ),
+                        GridColumn(
+                          columnName: 'Recovered',
+                          label: const Text('Recovered'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
 
-        // LineChartWidget(pricePoints),
-        );
+            // return SingleChildScrollView(
+            //   child: SizedBox(
+            //     height: MediaQuery.of(context).size.height,
+            //     child: Column(
+            //       children: [
+            //         const Padding(
+            //           padding: EdgeInsets.all(10),
+            //           child: Text(
+            //             'Date vs Death',
+            //             style: TextStyle(fontSize: 20),
+            //           ),
+            //         ),
+            //         Expanded(
+            //           child: LineChart(
+            //             LineChartData(
+            //               lineBarsData: [
+            //                 LineChartBarData(
+            //                   spots: covid19Data.map((point) {
+            //                     final x = (point.date
+            //                             ?.difference(DateTime.now())
+            //                             .inDays
+            //                             .toDouble() ??
+            //                         0.0);
+            //                     final y = point.death?.toDouble() ?? 0.0;
+            //                     return FlSpot(x, y);
+            //                   }).toList(),
+            //                   isCurved: true,
+            //                   dotData: FlDotData(show: true),
+            //                 )
+            //               ],
+            //             ),
+            //           ),
+            //         ),
+            //         const Padding(
+            //           padding: EdgeInsets.all(10),
+            //           child: Text(
+            //             'Date vs Positive',
+            //             style: TextStyle(fontSize: 20),
+            //           ),
+            //         ),
+            //         Expanded(
+            //           child: Padding(
+            //             padding: const EdgeInsets.all(8.0),
+            //             child: LineChart(
+            //               LineChartData(
+            //                 titlesData: FlTitlesData(
+            //                   topTitles: AxisTitles(
+            //                     sideTitles: SideTitles(showTitles: false),
+            //                   ),
+            //                   rightTitles: AxisTitles(
+            //                     sideTitles: SideTitles(showTitles: false),
+            //                   ),
+            //                 ),
+            //                 gridData: FlGridData(show: false),
+            //                 lineBarsData: [
+            //                   LineChartBarData(
+            //                     spots: covid19Data
+            //                         .map(
+            //                           (point) => FlSpot(
+            //                               (point.date?.microsecondsSinceEpoch
+            //                                       .toDouble()) ??
+            //                                   0.0,
+            //                               point.positive?.toDouble() ?? 0.0),
+            //                         )
+            //                         .toList(),
+            //                     isCurved: true,
+            //                     dotData: FlDotData(show: true),
+            //                   ),
+            //                 ],
+            //               ),
+            //             ),
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // );
+
+            // return ListView.builder(
+            //   itemCount: covid19Data.length,
+            //   itemBuilder: (BuildContext context, int index) {
+            //     return AspectRatio(
+            //       aspectRatio: 2,
+            //       child: LineChart(
+            //         LineChartData(
+            //           lineBarsData: [
+            //             LineChartBarData(
+            //                 spots: covid19Data
+            //                     .map((point) => FlSpot(
+            //                         point.death?.toDouble() ?? 0.0,
+            //                         point.death?.toDouble() ?? 0.0))
+            //                     .toList(),
+            //                 isCurved: true,
+            //                 dotData: FlDotData(show: true))
+            //           ],
+            //         ),
+            //       ),
+            //     );
+            //     // return Column(
+            //     //   children: [
+            //     //     Text('${covid19Data[index].death}'),
+            //     //      Text('${covid19Data[index].date}'),
+            //     //   ],
+            //     // );
+            //   },
+            // );
+
+          }
+
+          return Center(
+            child: TextButton.icon(
+              onPressed: () {
+                context.read<CovidBloc>().add(
+                      GetCovidData(),
+                    );
+              },
+              icon: const Icon(Icons.refresh),
+              label: const Text('Refresh'),
+            ),
+          );
+        },
+      ),
+
+      // LineChartWidget(pricePoints),
+    );
   }
 }

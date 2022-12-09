@@ -18,6 +18,11 @@ class CovidGridSource extends DataGridSource {
                   columnName: 'Negative', value: covid19GridRow.negative),
               DataGridCell<int>(
                   columnName: 'Action', value: covid19GridRow.negative),
+              DataGridCell<int>(
+                  columnName: 'Hospitalized',
+                  value: covid19GridRow.hospitalized),
+              DataGridCell<int>(
+                  columnName: 'Recovered', value: covid19GridRow.recovered),
             ],
           ),
         )
