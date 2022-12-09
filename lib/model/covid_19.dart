@@ -110,7 +110,7 @@ class COVID19 {
         );
 
     factory COVID19.fromJson(Map<String, dynamic> json) => COVID19(
-        date: DateTime.tryParse('${json['date']}'),
+        date: DateTime.tryParse('${json['date']}') ?? DateTime(0),
         states: json["states"]??0,
         positive: json["positive"] ?? 0,
         negative: json["negative"] ?? 0,
