@@ -11,7 +11,7 @@ class COVID19Service {
   Future<List<COVID19>> getCovid19Data() async {
    // print('object');
     final response = await dio.get('$baseurl$path');
-   print(response.data);
+   //print(response.data);
     if (response.statusCode == 200) {
       final covid19Data = response.data
           ?.map<COVID19>((covid) => COVID19.fromJson(covid))

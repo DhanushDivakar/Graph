@@ -33,13 +33,13 @@ class CovidGridSource extends DataGridSource {
   DataGridRowAdapter? buildRow(DataGridRow row) {
     return DataGridRowAdapter(
       cells: row.getCells().map<Widget>((dataGridCell) {
-        if (dataGridCell.columnName == 'Action') {
-          return IconButton(
-              onPressed: () {
-                print(dataGridCell);
-              },
-              icon: Icon(Icons.show_chart));
-        }
+        // if (dataGridCell.columnName == 'Action') {
+        //   return IconButton(
+        //       onPressed: () {
+        //         print(dataGridCell);
+        //       },
+        //       icon: Icon(Icons.show_chart));
+        // }
         return Text(dataGridCell.value.toString());
       }).toList(),
     );
