@@ -104,6 +104,7 @@ class MyHomePage extends StatelessWidget {
                                     sideTitles: SideTitles(showTitles: false))),
                             lineBarsData: [
                               LineChartBarData(
+                                barWidth: 0.0,
                                 color: Colors.purple,
                                 spots: covid19Data.map((point) {
                                   final x = (point.date
